@@ -41,14 +41,14 @@ public:
 };
 
 template<class T>
-inline LinkedList<T>::LinkedList() {
+LinkedList<T>::LinkedList() {
 	first_ = NULL;
 	last_ = NULL;
 	length_ = 0;
 }
 
 template<class T>
-inline LinkedList<T>::LinkedList(T* items, int count) : LinkedList()
+LinkedList<T>::LinkedList(T* items, int count) : LinkedList()
 {
 	if (count < 0)
 		throw std::invalid_argument("Received negative count");
@@ -58,7 +58,7 @@ inline LinkedList<T>::LinkedList(T* items, int count) : LinkedList()
 }
 
 template<class T>
-inline LinkedList<T>::LinkedList(const LinkedList<T>& list) : LinkedList()
+LinkedList<T>::LinkedList(const LinkedList<T>& list) : LinkedList()
 {
 	Node* node = list.first_;
 	for (int i = 0; i < list.length_; i++) {
@@ -68,7 +68,7 @@ inline LinkedList<T>::LinkedList(const LinkedList<T>& list) : LinkedList()
 }
 
 template<class T>
-inline LinkedList<T>::~LinkedList()
+LinkedList<T>::~LinkedList()
 {
 	struct Node* tmp;
 	last_ = NULL;
@@ -81,7 +81,7 @@ inline LinkedList<T>::~LinkedList()
 }
 
 template<class T>
-inline T LinkedList<T>::GetFirst()
+T LinkedList<T>::GetFirst()
 {
 	if (!length_)
 		throw std::out_of_range("Index out of range");
@@ -90,7 +90,7 @@ inline T LinkedList<T>::GetFirst()
 }
 
 template<class T>
-inline T LinkedList<T>::GetLast()
+T LinkedList<T>::GetLast()
 {
 	if (!length_)
 		throw std::out_of_range("Index out of range");
@@ -99,7 +99,7 @@ inline T LinkedList<T>::GetLast()
 }
 
 template<class T>
-inline T LinkedList<T>::Get(int index)
+T LinkedList<T>::Get(int index)
 {
 	if (index < 0 || index >= length_)
 		throw std::out_of_range("Index out of range");
@@ -111,7 +111,7 @@ inline T LinkedList<T>::Get(int index)
 }
 
 template<class T>
-inline LinkedList<T> LinkedList<T>::GetSubList(int startIndex, int endIndex)
+LinkedList<T> LinkedList<T>::GetSubList(int startIndex, int endIndex)
 {
 	if (startIndex < 0 || startIndex >= length_ 
 		|| endIndex < 0 || endIndex >= length_)
@@ -132,13 +132,13 @@ inline LinkedList<T> LinkedList<T>::GetSubList(int startIndex, int endIndex)
 }
 
 template<class T>
-inline int LinkedList<T>::length()
+int LinkedList<T>::length()
 {
 	return length_;
 }
 
 template<class T>
-inline void LinkedList<T>::Append(T item)
+void LinkedList<T>::Append(T item)
 {
 	Node* node = new Node();
 	node->item = item;
@@ -153,7 +153,7 @@ inline void LinkedList<T>::Append(T item)
 }
 
 template<class T>
-inline void LinkedList<T>::Prepend(T item)
+void LinkedList<T>::Prepend(T item)
 {
 	Node* node = new Node();
 	node->item = item;
@@ -168,7 +168,7 @@ inline void LinkedList<T>::Prepend(T item)
 }
 
 template<class T>
-inline void LinkedList<T>::InsertAt(T item, int index)
+void LinkedList<T>::InsertAt(T item, int index)
 {
 	if (index < 0 || index >= length_)
 		throw std::out_of_range("Index out of range");
@@ -186,7 +186,7 @@ inline void LinkedList<T>::InsertAt(T item, int index)
 }
 
 template<class T>
-inline LinkedList<T> LinkedList<T>::Concat(LinkedList<T>& list)
+LinkedList<T> LinkedList<T>::Concat(LinkedList<T>& list)
 {
 	LinkedList<T> concatedList(*this);
 	Node* node = list.first_;
@@ -198,7 +198,7 @@ inline LinkedList<T> LinkedList<T>::Concat(LinkedList<T>& list)
 }
 
 template<class T>
-inline T& LinkedList<T>::operator[](int index)
+T& LinkedList<T>::operator[](int index)
 {
 	if (index < 0 || index >= length_)
 		throw std::out_of_range("Index out of range");
@@ -210,7 +210,7 @@ inline T& LinkedList<T>::operator[](int index)
 }
 
 template<class T>
-inline const T& LinkedList<T>::operator[](int index) const
+const T& LinkedList<T>::operator[](int index) const
 {
 	if (index < 0 || index >= length_)
 		throw std::out_of_range("Index out of range");

@@ -20,10 +20,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dynamic_array.h">
+    <ClInclude Include="sequence.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="linked_list.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamic_array.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="array_sequence.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="list_sequence.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

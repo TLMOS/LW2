@@ -10,25 +10,34 @@ class DynamicArray
 {
 private:
 	T* items_;
-	int size_;
+	size_t size_;
 
 public:
-	DynamicArray(int size);
-	DynamicArray(T* items, int count);
-	DynamicArray(const DynamicArray<T>& dynamicArray);
 	~DynamicArray();
 
-	T Get(int i);
-	int size();
-	void Set(int i, T value);
-	void Resize(int size);
+	DynamicArray();
+	DynamicArray(size_t size);
+	DynamicArray(T* items, size_t count);
+	DynamicArray(const DynamicArray<T>& dynamicArray);
 
-	T& operator[](int ind);
-	const T& operator[](int ind) const;
+	T Get(size_t i) const;
+	size_t GetSize() const;
+	void Set(size_t i, T value);
+	void Resize(size_t size);
+
+	T& operator[](size_t ind);
+	const T& operator[](size_t ind) const;
 };
 
 template<class T>
-DynamicArray<T>::DynamicArray(int size)
+DynamicArray<T>::DynamicArray()
+{
+	items_ = NULL;
+	size_ = 0;
+}
+
+template<class T>
+DynamicArray<T>::DynamicArray(size_t size)
 {
 	if (size < 0)
 		throw std::invalid_argument("Received negative size");
@@ -38,12 +47,14 @@ DynamicArray<T>::DynamicArray(int size)
 }
 
 template<class T>
-DynamicArray<T>::DynamicArray(T* const items, int count)
+DynamicArray<T>::DynamicArray(T* const items, size_t count)
 {
 	if (count < 0)
 		throw std::invalid_argument("Received negative count");
 
 	items_ = (T*)std::malloc(count * sizeof(T));
+	if (!items_)
+		throw std::runtime_error("Cannot allocate memory");
 	std::memcpy(items_, items, count * sizeof(T));
 	size_ = count;
 }
@@ -59,7 +70,7 @@ DynamicArray<T>::~DynamicArray()
 }
 
 template<class T>
-T DynamicArray<T>::Get(int i)
+T DynamicArray<T>::Get(size_t i) const
 {
 	if (i < 0 || i >= size_)
 		throw std::out_of_range("Index out of range");
@@ -68,13 +79,13 @@ T DynamicArray<T>::Get(int i)
 }
 
 template<class T>
-int DynamicArray<T>::size()
+size_t DynamicArray<T>::GetSize() const
 {
 	return size_;
 }
 
 template<class T>
-void DynamicArray<T>::Set(int i, T value)
+void DynamicArray<T>::Set(size_t i, T value)
 {
 	if (i < 0 || i >= size_)
 		throw std::out_of_range("Index out of range");
@@ -83,12 +94,14 @@ void DynamicArray<T>::Set(int i, T value)
 }
 
 template<class T>
-void DynamicArray<T>::Resize(int newSize)
+void DynamicArray<T>::Resize(size_t newSize)
 {
 	if(newSize < 0)
 		throw std::invalid_argument("Received negative size");
 
 	T* tmp = (T*)malloc(newSize * sizeof(T));
+	if (!tmp)
+		throw std::runtime_error("Cannot allocate memory");
 	memcpy(tmp, items_, std::min(size_, newSize) * sizeof(T));
 	free(items_);
 	items_ = tmp;
@@ -96,7 +109,7 @@ void DynamicArray<T>::Resize(int newSize)
 }
 
 template<class T>
-T& DynamicArray<T>::operator[](int i)
+T& DynamicArray<T>::operator[](size_t i)
 {
 	if (i < 0 || i >= size_)
 		throw std::out_of_range("Index out of range");
@@ -105,7 +118,7 @@ T& DynamicArray<T>::operator[](int i)
 }
 
 template<class T>
-const T& DynamicArray<T>::operator[](int i) const
+const T& DynamicArray<T>::operator[](size_t i) const
 {
 	if (i < 0 || i >= size_)
 		throw std::out_of_range("Index out of range");

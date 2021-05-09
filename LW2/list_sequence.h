@@ -25,6 +25,7 @@ public:
 	virtual Sequence<T>* GetSubsequence(size_t startIndex, size_t endIndex) const;
 	virtual size_t GetLength() const;
 
+	virtual void Set(size_t index, T item);
 	virtual void Append(T item);
 	virtual void Prepend(T item);
 	virtual void InsertAt(T item, size_t index);
@@ -118,6 +119,12 @@ template<class T>
 inline size_t ListSequence<T>::GetLength() const
 {
 	return list_->GetLength();
+}
+
+template<class T>
+inline void ListSequence<T>::Set(size_t index, T item)
+{
+	list_->Set(index, item);
 }
 
 template<class T>

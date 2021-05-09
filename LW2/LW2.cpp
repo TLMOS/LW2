@@ -42,6 +42,26 @@ void dequeInfo(Deque<T>* deque) {
     }
 }
 
+bool compareInt(int a, int b) {
+    return a > b;
+}
+
+bool isEven(int x) {
+    return x % 2 == 0;
+}
+
+int plusOne(int x) {
+    return x + 1;
+}
+
+float toFloat(int x) {
+    return (float)x + 0.1;
+}
+
+int sum(int a, int b) {
+    return a + b;
+}
+
 void test()
 {
     
@@ -49,14 +69,36 @@ void test()
     deque->PushFront(2);
     deque->PushFront(3);
     deque->PushFront(4);
-    deque->PushBack(1);
+    deque->PushBack(66);
     deque->PushBack(0);
     deque->PushBack(11);
     deque->PopFront();
     dequeInfo(deque);
     Deque<int>* deque3 = new Deque<int>(*deque);
     Deque<int>* deque4 = deque->Concat(deque3);
+    deque4->Sort(compareInt);
     dequeInfo(deque4);
+    Deque<int>* deque6 = deque4->Where(isEven);
+    dequeInfo(deque6);
+    Deque<int>* deque7 = deque4->Map(plusOne);
+    dequeInfo(deque7);
+    Deque<float>* deque8 = deque4->Map(toFloat);
+    dequeInfo(deque8);
+    int x = deque4->Reduce(sum, 0);
+    if (!MEMORY_MOD)
+        std::cout << "Sum: " << x << '\n';
+    int idx1 = deque4->Find(11);
+    if (!MEMORY_MOD)
+        std::cout << "Find 11: " << idx1 << '\n';
+    Sequence<int>* s8 = new ListSequence<int>();
+    s8->Append(3);
+    s8->Append(11);
+    s8->Append(11);
+    s8->Append(66);
+    Deque<int>* ddd = new Deque<int>(*s8);
+    int idx2 = deque4->Find(ddd);
+    if (!MEMORY_MOD)
+        std::cout << "Find 3, 11, 11, 66: " << idx2 << '\n';
     Deque<int>* deque5 = deque4->GetSubsequence(1, 2);
     dequeInfo(deque5);
 
@@ -65,7 +107,7 @@ void test()
     delete(deque4);
     delete(deque5);
     
-    
+    /*
     Sequence<int>* s1 = new ArraySequence<int>;
 
     s1->Append(5);
@@ -110,7 +152,7 @@ void test()
     delete(s3);
     delete(s4);
     delete(s5);
-    
+    */
 
     /*
     //Linked list

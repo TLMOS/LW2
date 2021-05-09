@@ -1,7 +1,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <stdexcept>
-
 #pragma once
 
 template<class T>
@@ -10,9 +9,9 @@ class LinkedList
 private:	
 	struct Node
 	{
-		T item;
-		Node* previous;
-		Node* next;
+		T item{};
+		Node* previous{};
+		Node* next{};
 	};
 
 	Node* first_;
@@ -29,7 +28,7 @@ public:
 	T GetFirst() const;
 	T GetLast() const;
 	T Get(size_t index) const;
-	LinkedList<T>* GetSubList(size_t startIndex, size_t endIndex) const;
+	LinkedList<T>* GetSubList(size_t start_index, size_t end_index) const;
 	size_t GetLength() const;
 
 	void Set(size_t index, T item);
@@ -114,20 +113,20 @@ T LinkedList<T>::Get(size_t index) const
 }
 
 template<class T>
-LinkedList<T>* LinkedList<T>::GetSubList(size_t startIndex, size_t endIndex) const
+LinkedList<T>* LinkedList<T>::GetSubList(size_t start_index, size_t end_index) const
 {
-	if (startIndex < 0 || startIndex >= length_ 
-		|| endIndex < 0 || endIndex >= length_)
+	if (start_index < 0 || start_index >= length_ 
+		|| end_index < 0 || end_index >= length_)
 		throw std::out_of_range("Index out of range");
-	if (startIndex > endIndex)
+	if (start_index > end_index)
 		throw std::invalid_argument("End index should be greater than or equal to start index");
 
-	size_t length = endIndex - startIndex + 1;
+	size_t length = end_index - start_index + 1;
 	T* items = (T*)std::malloc(length * sizeof(T));
 	if (!items)
 		throw std::runtime_error("Cannot allocate memory");
 	Node* node = first_;
-	for (int i = 0; i < startIndex; i++)
+	for (int i = 0; i < start_index; i++)
 		node = node->next;
 	for (int i = 0; i < length; i++) {
 		items[i] = (node->item);

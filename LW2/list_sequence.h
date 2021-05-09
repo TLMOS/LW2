@@ -1,4 +1,3 @@
-#pragma once
 #include <cstdlib>
 #include <cstring>
 #include "sequence.h"
@@ -22,7 +21,7 @@ public:
 	virtual T GetFirst() const;
 	virtual T GetLast() const;
 	virtual T Get(size_t index) const;
-	virtual Sequence<T>* GetSubsequence(size_t startIndex, size_t endIndex) const;
+	virtual Sequence<T>* GetSubsequence(size_t start_index, size_t end_index) const;
 	virtual size_t GetLength() const;
 
 	virtual void Set(size_t index, T item);
@@ -101,17 +100,17 @@ inline T ListSequence<T>::Get(size_t index) const
 }
 
 template<class T>
-inline Sequence<T>* ListSequence<T>::GetSubsequence(size_t startIndex, size_t endIndex) const
+inline Sequence<T>* ListSequence<T>::GetSubsequence(size_t start_index, size_t end_index) const
 {
-	if (startIndex < 0 || startIndex >= list_->GetLength()
-		|| endIndex < 0 || endIndex >= list_->GetLength())
+	if (start_index < 0 || start_index >= list_->GetLength()
+		|| end_index < 0 || end_index >= list_->GetLength())
 		throw std::out_of_range("Index out of range");
-	if (startIndex > endIndex)
+	if (start_index > end_index)
 		throw std::invalid_argument("End index should be greater than or equal to start index");
 
 	ListSequence<T>* subSeq = new ListSequence<T>();
 	delete(subSeq->list_);
-	subSeq->list_ = list_->GetSubList(startIndex, endIndex);
+	subSeq->list_ = list_->GetSubList(start_index, end_index);
 	return subSeq;
 }
 

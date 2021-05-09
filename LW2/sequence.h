@@ -1,5 +1,13 @@
 #pragma once
 
+enum class SequenceType
+{
+	None = 1,
+	Same,
+	List,
+	Array
+};
+
 template<class T>
 class Sequence
 {
@@ -9,7 +17,7 @@ public:
 	virtual T GetFirst() const = 0;
 	virtual T GetLast() const = 0;
 	virtual T Get(size_t index) const = 0;
-	virtual Sequence<T>* GetSubsequence(size_t startIndex, size_t endIndex) const = 0;
+	virtual Sequence<T>* GetSubsequence(size_t start_index, size_t end_index) const = 0;
 	virtual size_t GetLength() const = 0;
 	
 	virtual void Set(size_t index, T item) = 0;

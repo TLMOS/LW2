@@ -22,7 +22,7 @@ public:
 	virtual T GetFirst() const;
 	virtual T GetLast() const;
 	virtual T Get(size_t index) const;
-	virtual Sequence<T>* GetSubsequence(size_t startIndex, size_t endIndex) const;
+	virtual Sequence<T>* GetSubsequence(size_t start_index, size_t end_index) const;
 	virtual size_t GetLength() const;
 
 	virtual void Set(size_t index, T item);
@@ -104,20 +104,20 @@ inline T ArraySequence<T>::Get(size_t index) const
 }
 
 template<class T>
-inline Sequence<T>* ArraySequence<T>::GetSubsequence(size_t startIndex, size_t endIndex) const
+inline Sequence<T>* ArraySequence<T>::GetSubsequence(size_t start_index, size_t end_index) const
 {
-	if (startIndex < 0 || startIndex >= length_
-		|| endIndex < 0 || endIndex >= length_)
+	if (start_index < 0 || start_index >= length_
+		|| end_index < 0 || end_index >= length_)
 		throw std::out_of_range("Index out of range");
-	if (startIndex > endIndex)
+	if (start_index > end_index)
 		throw std::invalid_argument("End index should be greater than or equal to start index");
 
-	size_t length = endIndex - startIndex + 1;
+	size_t length = end_index - start_index + 1;
 	T* items = (T*)std::malloc(length * sizeof(T));
 	if (!items)
 		throw std::runtime_error("Cannot allocate memory");
 	for (size_t i = 0; i < length; i++)
-		items[i] = array_->Get(startIndex + i);
+		items[i] = array_->Get(start_index + i);
 	ArraySequence<T>* subseq = new ArraySequence<T>(items, length);
 	free(items);
 	return subseq;
@@ -185,6 +185,9 @@ inline void ArraySequence<T>::InsertAt(T item, size_t index)
 template<class T>
 inline void ArraySequence<T>::Delete(size_t index)
 {
+	if (index < 0 || index >= length_)
+		throw std::out_of_range("Index out of range");
+
 	array_->Delete(index);
 	length_--;
 	if (array_->GetSize() / 2 >= length_)

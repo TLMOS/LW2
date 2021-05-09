@@ -2,7 +2,6 @@
 #include <cstring>
 #include <stdexcept>
 #include <algorithm>
-
 #pragma once
 
 template<class T>

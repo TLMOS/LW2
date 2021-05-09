@@ -3,20 +3,13 @@
 #include "sequence.h"
 #include "array_sequence.h"
 #include "list_sequence.h"
-
 #pragma once
 
 template<class T>
 class Deque
 {
 public:
-	enum class SequenceType
-	{
-		None = 1,
-		Same,
-		List,
-		Array
-	};
+	
 
 private:
 	Sequence<T>* sequence_;
@@ -28,6 +21,8 @@ public:
 	~Deque();
 
 	Deque(SequenceType seqType = SequenceType::None);
+	Deque(T* items, size_t count,
+		SequenceType seqType = SequenceType::None);
 	Deque(const Sequence<T>& sequence,
 		SequenceType seqType = SequenceType::None);
 	Deque(const Deque<T>& deque,
@@ -48,14 +43,13 @@ public:
 	int Find(Deque<T>* deque) const;
 
 	Deque<T>* Concat(Deque<T>* deque) const;
-	Deque<T>* GetSubsequence(size_t startIndex, size_t endIndex) const;
+	Deque<T>* GetSubsequence(size_t start_index, size_t end_index) const;
 	void Sort(bool (*compare)(T, T));
 	Deque<T>* Sorted(bool (*compare)(T, T)) const;
 
 	template<class G> Deque<G>* Map(G (*f)(T)) const;
 	Deque<T>* Where(bool (*f)(T)) const;
 	T Reduce(T (*f)(T, T), T c) const;
-	
 };
 	
 template<class T>
@@ -82,6 +76,27 @@ inline Deque<T>::Deque(SequenceType seqType)
 		default:
 			throw std::invalid_argument("Got wrong sequence type.");
 			break;
+	}
+}
+
+template<class T>
+inline Deque<T>::Deque(T* items, size_t count, SequenceType seqType)
+{
+	sequenceType_ = seqType;
+	switch (seqType)
+	{
+	case SequenceType::None:
+		seqType = kDefaultSequenceType;
+		sequenceType_ = seqType;
+	case SequenceType::Array:
+		sequence_ = new ArraySequence<T>(items, count);
+		break;
+	case SequenceType::List:
+		sequence_ = new ListSequence<T>(items, count);
+		break;
+	default:
+		throw std::invalid_argument("Got wrong sequence type.");
+		break;
 	}
 }
 
@@ -173,7 +188,7 @@ inline size_t Deque<T>::GetLength() const
 template<class T>
 inline int Deque<T>::GetSequenceType() const
 {
-	return sequenceType_;
+	return (int)sequenceType_;
 }
 
 template<class T>
@@ -219,11 +234,11 @@ inline Deque<T>* Deque<T>::Concat(Deque<T>* deque) const
 }
 
 template<class T>
-inline Deque<T>* Deque<T>::GetSubsequence(size_t startIndex, size_t endIndex) const
+inline Deque<T>* Deque<T>::GetSubsequence(size_t start_index, size_t end_index) const
 {
 	Deque<T>* subDeque = new Deque<T>(sequenceType_);
 	delete(subDeque->sequence_);
-	subDeque->sequence_ = sequence_->GetSubsequence(startIndex, endIndex);
+	subDeque->sequence_ = sequence_->GetSubsequence(start_index, end_index);
 	return subDeque;
 }
 
@@ -244,8 +259,8 @@ inline void Deque<T>::Sort(bool(*compare)(T, T))
 template<class T>
 inline Deque<T>* Deque<T>::Sorted(bool(*compare)(T, T)) const
 {
-	Deque<T>* deque = new Deque<T>(this);
-	deque->Sort();
+	Deque<T>* deque = new Deque<T>(*this);
+	deque->Sort(compare);
 	return deque;
 }
 

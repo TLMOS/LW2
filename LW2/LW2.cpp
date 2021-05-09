@@ -4,6 +4,7 @@
 #include "sequence.h"
 #include "array_sequence.h"
 #include "list_sequence.h"
+#include "deque.h"
 
 const bool MEMORY_MOD = false;
 
@@ -27,17 +28,60 @@ void linkedListInfo(LinkedList<T>* list) {
     }
 }
 
+template<class T>
+void dequeInfo(Deque<T>* deque) {
+    if (!MEMORY_MOD) {
+        std::cout << "Length: " << deque->GetLength() << '\n';
+        for (int i = 0; i < deque->GetLength(); i++) {
+            T item = deque->PopFront();
+            std::cout << item << ' ';
+            deque->PushBack(item);
+        }
+            
+        std::cout << "\n\n";
+    }
+}
+
 void test()
 {
-    Sequence<int>* s = new ListSequence<int>;
+    
+    Deque<int>* deque = new Deque<int>(Deque<int>::SequenceType::List);
+    deque->PushFront(2);
+    deque->PushFront(3);
+    deque->PushFront(4);
+    deque->PushBack(1);
+    deque->PushBack(0);
+    deque->PushBack(11);
+    deque->PopFront();
+    dequeInfo(deque);
+    Deque<int>* deque3 = new Deque<int>(*deque);
+    Deque<int>* deque4 = deque->Concat(deque3);
+    dequeInfo(deque4);
+    Deque<int>* deque5 = deque4->GetSubsequence(1, 2);
+    dequeInfo(deque5);
 
-    s->Append(5);
-    s->Append(2);
-    s->Prepend(7);
-    (*s)[0] = 23;
+    delete(deque);
+    delete(deque3);
+    delete(deque4);
+    delete(deque5);
+    
+    
+    Sequence<int>* s1 = new ArraySequence<int>;
+
+    s1->Append(5);
+    s1->Append(2);
+    s1->Prepend(7);
+    (*s1)[0] = 23;
+    Sequence<int>* s = new ArraySequence<int>(*s1);
     s->Append(3);
     s->Prepend(1);
     s->InsertAt(100, 2);
+    s->Delete(5);
+    s->Delete(0);
+    s->Delete(2);
+    s->Append(1);
+    s->Append(1);
+    s->Append(1);
 
     seqInfo(s);
     if (!MEMORY_MOD) {
@@ -61,10 +105,12 @@ void test()
     
     delete(arr);
     delete(s);
+    delete(s1);
     delete(s2);
     delete(s3);
     delete(s4);
     delete(s5);
+    
 
     /*
     //Linked list
@@ -91,7 +137,7 @@ void test()
 int main()
 {
 
-    for (int j = 0; j < 100000 && MEMORY_MOD; j++) {
+    for (int j = 0; j < 1000000 && MEMORY_MOD; j++) {
         test();
     }
     test();

@@ -16,7 +16,8 @@ public:
 
 	ArraySequence();
 	ArraySequence(T* items, size_t count);
-	ArraySequence(const DynamicArray <T>& array);
+	ArraySequence(const DynamicArray<T>& array);
+	ArraySequence(const Sequence<T>& sequence);
 
 	virtual T GetFirst() const;
 	virtual T GetLast() const;
@@ -27,7 +28,8 @@ public:
 	virtual void Append(T item);
 	virtual void Prepend(T item);
 	virtual void InsertAt(T item, size_t index);
-	virtual Sequence<T>* Concat(Sequence<T>* list);
+	virtual void Delete(size_t index);
+	virtual Sequence<T>* Concat(Sequence<T>* list) const;
 
 	virtual T& operator[](size_t index);
 	virtual const T& operator[](size_t index) const;
@@ -58,6 +60,19 @@ inline ArraySequence<T>::ArraySequence(const DynamicArray<T>& array)
 {
 	array_ = new DynamicArray<T>(array);
 	length_ = array.GetSize();
+}
+
+template<class T>
+inline ArraySequence<T>::ArraySequence(const Sequence<T>& sequence)
+{
+	length_ = sequence.GetLength();
+	T* items = (T*)std::malloc(length_ * sizeof(T));
+	if (!items)
+		throw std::runtime_error("Cannot allocate memory");
+	for (size_t i = 0; i < length_; i++)
+		items[i] = sequence.Get(i);
+	array_ = new DynamicArray<T>(items, length_);
+	free(items);
 }
 
 template<class T>
@@ -158,13 +173,22 @@ inline void ArraySequence<T>::InsertAt(T item, size_t index)
 }
 
 template<class T>
-inline Sequence<T>* ArraySequence<T>::Concat(Sequence<T>* list)
+inline void ArraySequence<T>::Delete(size_t index)
+{
+	array_->Delete(index);
+	length_--;
+	if (array_->GetSize() / 2 >= length_)
+		array_->Resize(array_->GetSize() / 2);
+}
+
+template<class T>
+inline Sequence<T>* ArraySequence<T>::Concat(Sequence<T>* list) const
 {
 	size_t length = length_ + list->GetLength();
 	T* items = (T*)std::malloc(length * sizeof(T));
 	if (!items)
 		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < array_->GetSize(); i++)
+	for (size_t i = 0; i < length_; i++)
 		items[i] = array_->Get(i);
 	for (size_t i = 0; i < list->GetLength(); i++)
 		items[length_ + i] = list->Get(i);

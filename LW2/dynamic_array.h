@@ -24,6 +24,7 @@ public:
 	size_t GetSize() const;
 	void Set(size_t i, T value);
 	void Resize(size_t size);
+	void Delete(size_t index);
 
 	T& operator[](size_t ind);
 	const T& operator[](size_t ind) const;
@@ -106,6 +107,24 @@ void DynamicArray<T>::Resize(size_t newSize)
 	free(items_);
 	items_ = tmp;
 	size_ = newSize;
+}
+
+template<class T>
+inline void DynamicArray<T>::Delete(size_t index)
+{
+	if (index < 0 || index >= size_)
+		throw std::out_of_range("Index out of range");
+
+	T* tmp = (T*)malloc((size_ - 1) * sizeof(T));
+	if (!tmp)
+		throw std::runtime_error("Cannot allocate memory");
+	if(index > 0)
+		memcpy(tmp, items_, index * sizeof(T));
+	if(index < size_ - 1)
+		memcpy(tmp + index, items_ + index + 1, (size_ - index - 1) * sizeof(T));
+	free(items_);
+	items_ = tmp;
+	size_--;
 }
 
 template<class T>

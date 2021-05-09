@@ -35,6 +35,7 @@ public:
 	void Append(T item);
 	void Prepend(T item);
 	void InsertAt(T item, size_t index);
+	void Delete(size_t index);
 	LinkedList<T>* Concat(LinkedList<T>* list);
 
 	T& operator[](size_t index);
@@ -132,6 +133,7 @@ LinkedList<T>* LinkedList<T>::GetSubList(size_t startIndex, size_t endIndex) con
 		node = node->next;
 	}
 	LinkedList<T>* subList = new LinkedList(items, length);
+	free(items);
 	return subList;
 }
 
@@ -188,6 +190,29 @@ void LinkedList<T>::InsertAt(T item, size_t index)
 	newNode->previous = node;
 	node->next = newNode;
 	length_++;
+}
+
+template<class T>
+inline void LinkedList<T>::Delete(size_t index)
+{
+	if (index < 0 || index >= length_)
+		throw std::out_of_range("Index out of range");
+
+	Node* node = first_;
+	for (int i = 0; i < index; i++)
+		node = node->next;
+
+	if (node->previous)
+		node->previous->next = node->next;
+	else
+		first_ = node->next;
+	if (node->next)
+		node->next->previous = node->previous;
+	else
+		last_ = node->previous;
+
+	delete node;
+	length_--;
 }
 
 template<class T>

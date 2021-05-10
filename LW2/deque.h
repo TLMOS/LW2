@@ -13,7 +13,7 @@ public:
 
 private:
 	Sequence<T>* sequence_;
-	SequenceType sequenceType_;
+	SequenceType sequence_type_;
 
 public:
 	static const SequenceType kDefaultSequenceType = SequenceType::List;
@@ -61,12 +61,12 @@ inline Deque<T>::~Deque()
 template<class T>
 inline Deque<T>::Deque(SequenceType seqType)
 {
-	sequenceType_ = seqType;
+	sequence_type_ = seqType;
 	switch (seqType)
 	{
 		case SequenceType::None:
 			seqType = kDefaultSequenceType;
-			sequenceType_ = seqType;
+			sequence_type_ = seqType;
 		case SequenceType::Array:
 			sequence_ = new ArraySequence<T>();
 			break;
@@ -82,12 +82,12 @@ inline Deque<T>::Deque(SequenceType seqType)
 template<class T>
 inline Deque<T>::Deque(T* items, size_t count, SequenceType seqType)
 {
-	sequenceType_ = seqType;
+	sequence_type_ = seqType;
 	switch (seqType)
 	{
 	case SequenceType::None:
 		seqType = kDefaultSequenceType;
-		sequenceType_ = seqType;
+		sequence_type_ = seqType;
 	case SequenceType::Array:
 		sequence_ = new ArraySequence<T>(items, count);
 		break;
@@ -103,12 +103,12 @@ inline Deque<T>::Deque(T* items, size_t count, SequenceType seqType)
 template<class T>
 inline Deque<T>::Deque(const Sequence<T>& sequence, SequenceType seqType)
 {
-	sequenceType_ = seqType;
+	sequence_type_ = seqType;
 	switch (seqType)
 	{
 		case SequenceType::None:
 			seqType = kDefaultSequenceType;
-			sequenceType_ = seqType;
+			sequence_type_ = seqType;
 		case SequenceType::Array:
 			sequence_ = new ArraySequence<T>(sequence);
 			break;
@@ -124,15 +124,15 @@ inline Deque<T>::Deque(const Sequence<T>& sequence, SequenceType seqType)
 template<class T>
 inline Deque<T>::Deque(const Deque<T>& deque, SequenceType seqType)
 {
-	sequenceType_ = seqType;
+	sequence_type_ = seqType;
 	switch (seqType)
 	{
 		case SequenceType::None:
 			seqType = kDefaultSequenceType;
-			sequenceType_ = seqType;
+			sequence_type_ = seqType;
 		case SequenceType::Same:
-			seqType = deque.sequenceType_;
-			sequenceType_ = seqType;
+			seqType = deque.sequence_type_;
+			sequence_type_ = seqType;
 		case SequenceType::Array:
 			sequence_ = new ArraySequence<T>(*deque.sequence_);
 			break;
@@ -188,7 +188,7 @@ inline size_t Deque<T>::GetLength() const
 template<class T>
 inline int Deque<T>::GetSequenceType() const
 {
-	return (int)sequenceType_;
+	return (int)sequence_type_;
 }
 
 template<class T>
@@ -227,7 +227,7 @@ inline int Deque<T>::Find(Deque<T>* deque) const
 template<class T>
 inline Deque<T>* Deque<T>::Concat(Deque<T>* deque) const
 {
-	Deque<T>* concated = new Deque<T>(sequenceType_);
+	Deque<T>* concated = new Deque<T>(sequence_type_);
 	delete(concated->sequence_);
 	concated->sequence_ = sequence_->Concat(deque->sequence_);
 	return concated;
@@ -236,7 +236,7 @@ inline Deque<T>* Deque<T>::Concat(Deque<T>* deque) const
 template<class T>
 inline Deque<T>* Deque<T>::GetSubsequence(size_t start_index, size_t end_index) const
 {
-	Deque<T>* subDeque = new Deque<T>(sequenceType_);
+	Deque<T>* subDeque = new Deque<T>(sequence_type_);
 	delete(subDeque->sequence_);
 	subDeque->sequence_ = sequence_->GetSubsequence(start_index, end_index);
 	return subDeque;

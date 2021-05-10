@@ -148,12 +148,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="LW2.cpp" />
+    <ClCompile Include="simple_interpreter.cpp" />
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deque.h" />
     <ClInclude Include="dynamic_array.h" />
     <ClInclude Include="array_sequence.h" />
+    <ClInclude Include="simple_interpreter.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="list_sequence.h" />
     <ClInclude Include="sequence.h" />

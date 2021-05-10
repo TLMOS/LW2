@@ -6,9 +6,10 @@
 #include "list_sequence.h"
 #include "deque.h"
 #include "tests.h"
+#include "simple_interpreter.h"
 
 int main()
 {
-	RepeatedTest(TestAll, 10000, "", false);
-	WaitKey();
+	SimpleInterpreter* intepreter = new SimpleInterpreter();
+	intepreter->Start();
 }

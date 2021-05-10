@@ -1134,7 +1134,7 @@ void TestDequeReduce(std::string prefix, bool silent)
 	float reduced = deque->Reduce(Sum, 0.f);
 	assert(reduced == sum);
 
-	delete(items);
+	free(items);
 	delete(deque);
 
 	if (!silent)

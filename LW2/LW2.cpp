@@ -10,6 +10,6 @@
 
 int main()
 {
-	SimpleInterpreter* intepreter = new SimpleInterpreter();
-	intepreter->Start();
+	SimpleInterpreter intepreter;
+	intepreter.Start();
 }

@@ -50,6 +50,8 @@ public:
 	template<class G> Deque<G>* Map(G (*f)(T)) const;
 	Deque<T>* Where(bool (*f)(T)) const;
 	T Reduce(T (*f)(T, T), T c) const;
+
+	Deque<Deque<T>*>* Split(T item) const;
 };
 	
 template<class T>
@@ -282,6 +284,27 @@ inline T Deque<T>::Reduce(T(*f)(T, T), T c) const
 	for (int i = 0; i < GetLength(); i++)
 		c = f(sequence_->Get(i), c);
 	return c;
+}
+
+template<class T>
+inline Deque<Deque<T>*>* Deque<T>::Split(T item) const
+{
+	Deque<Deque<T>*>* splitted = new Deque<Deque<T>*>(SequenceType::List);
+	Deque<T>* part = NULL;
+	for (size_t i = 0; i < GetLength(); i++) {
+		if (part && Get(i) == item) {
+			splitted->PushBack(part);
+			part = NULL;
+		}
+		else {
+			if (!part)
+				part = new Deque<T>(SequenceType::List);
+			part->sequence_->Append(Get(i));
+		}
+	}
+	if (part)
+		splitted->PushBack(part);
+	return splitted;
 }
 
 template<class T>

@@ -646,32 +646,34 @@ void TestSequenceSet(SequenceType seqType, std::string prefix, bool silent)
 		std::cout << "): ";
 	}
 
-	const size_t size = 3;
-	float* items = (float*)std::malloc(size * sizeof(float));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < size; i++)
-		items[i] = i + 0.1f;
-	Sequence<float>* sequence;
-	if (seqType == SequenceType::List)
-		sequence = new ListSequence<float>();
-	else if (seqType == SequenceType::Array)
-		sequence = new ArraySequence<float>();
-	else
-		throw std::invalid_argument("Got wrong sequence type.");
+	for (size_t size = 0; size < 5; size++)
+	{
+		float* items = (float*)std::malloc(size * sizeof(float));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		for (size_t i = 0; i < size; i++)
+			items[i] = i + 0.1f;
+		Sequence<float>* sequence;
+		if (seqType == SequenceType::List)
+			sequence = new ListSequence<float>();
+		else if (seqType == SequenceType::Array)
+			sequence = new ArraySequence<float>();
+		else
+			throw std::invalid_argument("Got wrong sequence type.");
 
-	for (int i = 0; i < size; i++) {
-		sequence->Append(0.f);
-	}
-	for (int i = 0; i < size; i++) {
-		sequence->Set(i, items[i]);
-	}
-	for (int i = 0; i < size; i++) {
-		assert(sequence->Get(i) == items[i]);
-	}
+		for (int i = 0; i < size; i++) {
+			sequence->Append(0.f);
+		}
+		for (int i = 0; i < size; i++) {
+			sequence->Set(i, items[i]);
+		}
+		for (int i = 0; i < size; i++) {
+			assert(sequence->Get(i) == items[i]);
+		}
 
-	free(items);
-	delete(sequence);
+		free(items);
+		delete(sequence);
+	}
 
 	if (!silent)
 		std::cout << "OK\n";
@@ -774,40 +776,42 @@ void TestSequenceConcat(SequenceType seqType, std::string prefix, bool silent)
 		std::cout << "): ";
 	}
 
-	const size_t size = 6;
-	float* items = (float*)std::malloc(size * sizeof(float));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < size; i++)
-		items[i] = i + 0.1f;
-	Sequence<float>* sequence_1;
-	Sequence<float>* sequence_2;
-	Sequence<float>* sequence_3;
-	if (seqType == SequenceType::List) {
-		sequence_1 = new ListSequence<float>();
-		sequence_2 = new ListSequence<float>();
+	for (size_t size = 0; size < 5; size++)
+	{
+		float* items = (float*)std::malloc(size * sizeof(float));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		for (size_t i = 0; i < size; i++)
+			items[i] = i + 0.1f;
+		Sequence<float>* sequence_1;
+		Sequence<float>* sequence_2;
+		Sequence<float>* sequence_3;
+		if (seqType == SequenceType::List) {
+			sequence_1 = new ListSequence<float>();
+			sequence_2 = new ListSequence<float>();
+		}
+		else if (seqType == SequenceType::Array) {
+			sequence_1 = new ArraySequence<float>();
+			sequence_2 = new ArraySequence<float>();
+		}
+		else
+			throw std::invalid_argument("Got wrong sequence type.");
+
+		for (int i = 0; i < size / 2; i++)
+			sequence_1->Append(items[i]);
+		for (int i = size / 2; i < size; i++)
+			sequence_2->Append(items[i]);
+		sequence_3 = sequence_1->Concat(sequence_2);
+
+		assert(sequence_3->GetLength() == size);
+		for (int i = 0; i < size; i++)
+			assert(sequence_3->Get(i) == items[i]);
+
+		free(items);
+		delete(sequence_1);
+		delete(sequence_2);
+		delete(sequence_3);
 	}
-	else if (seqType == SequenceType::Array) {
-		sequence_1 = new ArraySequence<float>();
-		sequence_2 = new ArraySequence<float>();
-	}
-	else
-		throw std::invalid_argument("Got wrong sequence type.");
-
-	for (int i = 0; i < size / 2; i++)
-		sequence_1->Append(items[i]);
-	for (int i = size / 2; i < size; i++)
-		sequence_2->Append(items[i]);
-	sequence_3 = sequence_1->Concat(sequence_2);
-
-	assert(sequence_3->GetLength() == size);
-	for (int i = 0; i < size; i++)
-		assert(sequence_3->Get(i) == items[i]);
-
-	free(items);
-	delete(sequence_1);
-	delete(sequence_2);
-	delete(sequence_3);
 
 	if (!silent)
 		std::cout << "OK\n";
@@ -824,37 +828,39 @@ void TestSequenceSubsequence(SequenceType seqType, std::string prefix, bool sile
 		std::cout << "): ";
 	}
 
-	const size_t size = 6;
-	float* items = (float*)std::malloc(size * sizeof(float));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < size; i++)
-		items[i] = i + 0.1f;
-	Sequence<float>* sequence_1;
-	Sequence<float>* sequence_2;
-	if (seqType == SequenceType::List)
-		sequence_1 = new ListSequence<float>(items, size);
-	else if (seqType == SequenceType::Array)
-		sequence_1 = new ArraySequence<float>(items, size);
-	else
-		throw std::invalid_argument("Got wrong sequence type.");
+	for (size_t size = 2; size < 5; size++)
+	{
+		float* items = (float*)std::malloc(size * sizeof(float));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		for (size_t i = 0; i < size; i++)
+			items[i] = i + 0.1f;
+		Sequence<float>* sequence_1;
+		Sequence<float>* sequence_2;
+		if (seqType == SequenceType::List)
+			sequence_1 = new ListSequence<float>(items, size);
+		else if (seqType == SequenceType::Array)
+			sequence_1 = new ArraySequence<float>(items, size);
+		else
+			throw std::invalid_argument("Got wrong sequence type.");
 
-	sequence_2 = sequence_1->GetSubsequence(0, size / 2);
-	size_t sub_size = size / 2 + 1;
-	assert(sequence_2->GetLength() == sub_size);
-	for (int i = 0; i < sub_size; i++)
-		assert(sequence_2->Get(i) == items[i]);
-	delete(sequence_2);
+		sequence_2 = sequence_1->GetSubsequence(0, size / 2);
+		size_t sub_size = size / 2 + 1;
+		assert(sequence_2->GetLength() == sub_size);
+		for (int i = 0; i < sub_size; i++)
+			assert(sequence_2->Get(i) == items[i]);
+		delete(sequence_2);
 
-	sequence_2 = sequence_1->GetSubsequence(size / 2, size - 1);
-	sub_size = size - size / 2;
-	assert(sequence_2->GetLength() == sub_size);
-	for (int i = 0; i < sub_size; i++)
-		assert(sequence_2->Get(i) == items[size / 2 + i]);
-	delete(sequence_2);
+		sequence_2 = sequence_1->GetSubsequence(size / 2, size - 1);
+		sub_size = size - size / 2;
+		assert(sequence_2->GetLength() == sub_size);
+		for (int i = 0; i < sub_size; i++)
+			assert(sequence_2->Get(i) == items[size / 2 + i]);
+		delete(sequence_2);
 
-	free(items);
-	delete(sequence_1);
+		free(items);
+		delete(sequence_1);
+	}
 
 	if (!silent)
 		std::cout << "OK\n";
@@ -871,29 +877,31 @@ void TestSequenceOperators(SequenceType seqType, std::string prefix, bool silent
 		std::cout << "): ";
 	}
 
-	const size_t size = 3;
-	float* items = (float*)std::malloc(size * sizeof(float));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < size; i++)
-		items[i] = i + 0.1f;
-	Sequence<float>* sequence;
-	if (seqType == SequenceType::List)
-		sequence = new ListSequence<float>();
-	else if (seqType == SequenceType::Array)
-		sequence = new ArraySequence<float>();
-	else
-		throw std::invalid_argument("Got wrong sequence type.");
+	for (size_t size = 0; size < 5; size++)
+	{
+		float* items = (float*)std::malloc(size * sizeof(float));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		for (size_t i = 0; i < size; i++)
+			items[i] = i + 0.1f;
+		Sequence<float>* sequence;
+		if (seqType == SequenceType::List)
+			sequence = new ListSequence<float>();
+		else if (seqType == SequenceType::Array)
+			sequence = new ArraySequence<float>();
+		else
+			throw std::invalid_argument("Got wrong sequence type.");
 
-	for (int i = 0; i < size; i++)
-		sequence->Append(0.f);
-	for (int i = 0; i < size; i++)
-		(*sequence)[i] = items[i];
-	for (int i = 0; i < size; i++)
-		assert((*sequence)[i] == items[i]);
-	
-	free(items);
-	delete(sequence);
+		for (int i = 0; i < size; i++)
+			sequence->Append(0.f);
+		for (int i = 0; i < size; i++)
+			(*sequence)[i] = items[i];
+		for (int i = 0; i < size; i++)
+			assert((*sequence)[i] == items[i]);
+
+		free(items);
+		delete(sequence);
+	}
 
 	if (!silent)
 		std::cout << "OK\n";
@@ -980,26 +988,27 @@ void TestDequePopPush(std::string prefix, bool silent)
 	if (!silent)
 		std::cout << prefix << "Pop and Push: ";
 
-	const size_t size = 5;
-	float* items = (float*)std::malloc(size * sizeof(float));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < size; i++)
-		items[i] = i + 0.1f;
-	Deque<float>* deque = new Deque<float>();
-	
-	deque->PushFront(items[1]);
-	deque->PushFront(items[0]);
-	deque->PushBack(items[2]);
-	deque->PushBack(items[3]);
-	deque->PushBack(items[4]);
+	for (size_t size = 2; size < 5; size++)
+	{
+		float* items = (float*)std::malloc(size * sizeof(float));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		for (size_t i = 0; i < size; i++)
+			items[i] = i + 0.1f;
+		Deque<float>* deque = new Deque<float>();
 
-	assert(deque->GetLength() == size);
-	for (int i = 0; i < size; i++)
-		assert(deque->PopFront() == items[i]);
-	
-	free(items);
-	delete(deque);
+		deque->PushFront(items[1]);
+		deque->PushFront(items[0]);
+		for (size_t i = 2; i < size; i++)
+			deque->PushBack(items[i]);
+
+		assert(deque->GetLength() == size);
+		for (int i = 0; i < size; i++)
+			assert(deque->PopFront() == items[i]);
+
+		free(items);
+		delete(deque);
+	}
 	
 	if (!silent)
 		std::cout << "OK\n";
@@ -1010,38 +1019,40 @@ void TestDequeSort(std::string prefix, bool silent)
 	if (!silent)
 		std::cout << prefix << "Sort: ";
 
-	const size_t size = 5;
-	float* items = (float*)std::malloc(size * sizeof(float));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	float* items_rev = (float*)std::malloc(size * sizeof(float));
-	if (!items_rev)
-		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < size; i++) {
-		float item = i + 0.1f;
-		items[i] = item;
-		items_rev[size - i - 1] = item;
+	for (size_t size = 0; size < 5; size++)
+	{
+		float* items = (float*)std::malloc(size * sizeof(float));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		float* items_rev = (float*)std::malloc(size * sizeof(float));
+		if (!items_rev)
+			throw std::runtime_error("Cannot allocate memory");
+		for (size_t i = 0; i < size; i++) {
+			float item = i + 0.1f;
+			items[i] = item;
+			items_rev[size - i - 1] = item;
+		}
+		Deque<float>* deque = new Deque<float>(items_rev, size);
+		Deque<float>* deque_sorted = deque->Sorted(CompareFloat);
+		deque->Sort(CompareFloat);
+
+		assert(deque->GetLength() == size);
+		assert(deque_sorted->GetLength() == size);
+		for (int i = 0; i < size; i++) {
+			assert(deque->Get(i) == items[i]);
+			assert(deque_sorted->Get(i) == items[i]);
+		}
+
+		free(items);
+		free(items_rev);
+		delete(deque);
+		delete(deque_sorted);
+
+		deque = new Deque<float>();
+		deque->Sort(CompareFloat);
+		delete(deque->Sorted(CompareFloat));
+		delete(deque);
 	}
-	Deque<float>* deque = new Deque<float>(items_rev, size);
-	Deque<float>* deque_sorted = deque->Sorted(CompareFloat);
-	deque->Sort(CompareFloat);
-
-	assert(deque->GetLength() == size);
-	assert(deque_sorted->GetLength() == size);
-	for (int i = 0; i < size; i++) {
-		assert(deque->Get(i) == items[i]);
-		assert(deque_sorted->Get(i) == items[i]);
-	}
-
-	free(items);
-	free(items_rev);
-	delete(deque);
-	delete(deque_sorted);
-
-	deque = new Deque<float>();
-	deque->Sort(CompareFloat);
-	delete(deque->Sorted(CompareFloat));
-	delete(deque);
 
 	if (!silent)
 		std::cout << "OK\n";
@@ -1052,30 +1063,32 @@ void TestDequeMap(std::string prefix, bool silent)
 	if (!silent)
 		std::cout << prefix << "Map: ";
 
-	const size_t size = 5;
-	int* items = (int*)std::malloc(size * sizeof(int));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	bool* items_target = (bool*)std::malloc(size * sizeof(bool));
-	if (!items_target)
-		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < size; i++) {
-		int item = (int)i;
-		items[i] = item;
-		items_target[i] = IsEven(item);
-	}
-	
-	Deque<int>* deque = new Deque<int>(items, size);
-	Deque<bool>* deque_processed = deque->Map(IsEven);
+	for (size_t size = 0; size < 5; size++)
+	{
+		int* items = (int*)std::malloc(size * sizeof(int));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		bool* items_target = (bool*)std::malloc(size * sizeof(bool));
+		if (!items_target)
+			throw std::runtime_error("Cannot allocate memory");
+		for (size_t i = 0; i < size; i++) {
+			int item = (int)i;
+			items[i] = item;
+			items_target[i] = IsEven(item);
+		}
 
-	assert(deque_processed->GetLength() == size);
-	for (int i = 0; i < size; i++)
-		assert(deque_processed->Get(i) == items_target[i]);
-	
-	free(items);
-	free(items_target);
-	delete(deque);
-	delete(deque_processed);
+		Deque<int>* deque = new Deque<int>(items, size);
+		Deque<bool>* deque_processed = deque->Map(IsEven);
+
+		assert(deque_processed->GetLength() == size);
+		for (int i = 0; i < size; i++)
+			assert(deque_processed->Get(i) == items_target[i]);
+
+		free(items);
+		free(items_target);
+		delete(deque);
+		delete(deque_processed);
+	}
 
 	if (!silent)
 		std::cout << "OK\n";
@@ -1086,29 +1099,31 @@ void TestDequeWhere(std::string prefix, bool silent)
 	if (!silent)
 		std::cout << prefix << "Where: ";
 
-	const size_t size = 5;
-	int* items = (int*)std::malloc(size * sizeof(int));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	Sequence<int>* target_sequence = new ListSequence<int>();
-	for (size_t i = 0; i < size; i++) {
-		int item = (int)i;
-		items[i] = item;
-		if (IsEven(item))
-			target_sequence->Append(item);
+	for (size_t size = 0; size < 5; size++)
+	{
+		int* items = (int*)std::malloc(size * sizeof(int));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		Sequence<int>* target_sequence = new ListSequence<int>();
+		for (size_t i = 0; i < size; i++) {
+			int item = (int)i;
+			items[i] = item;
+			if (IsEven(item))
+				target_sequence->Append(item);
+		}
+
+		Deque<int>* deque = new Deque<int>(items, size);
+		Deque<int>* deque_processed = deque->Where(IsEven);
+
+		assert(deque_processed->GetLength() == target_sequence->GetLength());
+		for (int i = 0; i < deque_processed->GetLength(); i++)
+			assert(deque_processed->Get(i) == target_sequence->Get(i));
+
+		free(items);
+		delete(target_sequence);
+		delete(deque);
+		delete(deque_processed);
 	}
-
-	Deque<int>* deque = new Deque<int>(items, size);
-	Deque<int>* deque_processed = deque->Where(IsEven);
-
-	assert(deque_processed->GetLength() == target_sequence->GetLength());
-	for (int i = 0; i < deque_processed->GetLength(); i++)
-		assert(deque_processed->Get(i) == target_sequence->Get(i));
-
-	free(items);
-	delete(target_sequence);
-	delete(deque);
-	delete(deque_processed);
 
 	if (!silent)
 		std::cout << "OK\n";
@@ -1119,23 +1134,25 @@ void TestDequeReduce(std::string prefix, bool silent)
 	if (!silent)
 		std::cout << prefix << "Reduce: ";
 
-	float sum = 0;
-	const size_t size = 5;
-	float* items = (float*)std::malloc(size * sizeof(float));
-	if (!items)
-		throw std::runtime_error("Cannot allocate memory");
-	for (size_t i = 0; i < size; i++) {
-		float item = i + 0.1f;
-		items[i] = item;
-		sum = Sum(sum, item);
+	for (size_t size = 0; size < 5; size++)
+	{
+		float sum = 0;
+		float* items = (float*)std::malloc(size * sizeof(float));
+		if (!items)
+			throw std::runtime_error("Cannot allocate memory");
+		for (size_t i = 0; i < size; i++) {
+			float item = i + 0.1f;
+			items[i] = item;
+			sum = Sum(sum, item);
+		}
+
+		Deque<float>* deque = new Deque<float>(items, size);
+		float reduced = deque->Reduce(Sum, 0.f);
+		assert(reduced == sum);
+
+		free(items);
+		delete(deque);
 	}
-
-	Deque<float>* deque = new Deque<float>(items, size);
-	float reduced = deque->Reduce(Sum, 0.f);
-	assert(reduced == sum);
-
-	free(items);
-	delete(deque);
 
 	if (!silent)
 		std::cout << "OK\n";

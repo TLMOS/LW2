@@ -132,6 +132,7 @@ void PrintHelpDeque()
     printf("  Map | (Snake, Upper, Lower)\n");
     printf("  Where | (NotSpace, Upper, Lower)\n");
     printf("  Reduce | (Spaces, Upper, Lower)\n");
+    printf("  Split | item\n");
 }
 
 //Class methods
@@ -332,6 +333,7 @@ void SimpleInterpreter::ProcessCommand(char* command)
     else if (!strcmp(command, "switch")) {
         char data_type_string[32];
         scanf_s("%s", data_type_string, 32);
+        data_type_string[31] = 0;
         if (!strcmp(data_type_string, "DynamicArray"))
             SwitchDataType(DataType::DynamicArray);
         else if (!strcmp(data_type_string, "LinkedList"))
@@ -785,6 +787,21 @@ void SimpleInterpreter::ProcessDequeCommand(char* command)
             printf("Error: Unknown function. Should be NotSpace, Upper or Lower\n");
         if (result)
             printf("Output: %c\n", result);
+    }
+    else if (!std::strcmp(command, "Split")) {
+        char item;
+        scanf_s(" %c", &item);
+        Deque<Deque<char>*>* splitted = deque_->Split(item);
+        for (int i = 0; i < splitted->GetLength(); i++) {
+            printf("Output: ");
+            Deque<char>* part = splitted->Get(i);
+            for (int j = 0; j < part->GetLength(); j++) {
+                printf("%c", part->Get(j));
+            }
+            if (part->Get(part->GetLength() - 1) == ' ')
+                printf("<");
+            printf("\n");
+        }
     }
     else if (!std::strcmp(command, "Help")) {
         PrintHelpDeque();
